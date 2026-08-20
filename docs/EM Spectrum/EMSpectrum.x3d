@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 4.1//EN" "https://www.web3d.org/specifications/x3d-4.1.dtd">
+<X3D profile='Interchange' version='4.1' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.1.xsd'>
+  <head>
+    <component name='Core' level='2'/>
+    <component name='Layering' level='1'/>
+    <component name='Layout' level='1'/>
+    <component name='Scripting' level='1'/>
+    <meta name='creator' content='Holger Seelig'/>
+    <meta name='created' content='Wed, 19 Aug 2026 14:19:32 GMT'/>
+    <meta name='modified' content='Thu, 20 Aug 2026 13:55:22 GMT'/>
+    <meta name='generator' content='Sunrize X3D Editor V2.1.21, https://create3000.github.io/sunrize/'/>
+  </head>
+  <Scene>
+    <ProtoDeclare name='EMSpectrum' appinfo='Creates a rectangle with the specified EM spectrum.'>
+      <ProtoInterface>
+        <field accessType='initializeOnly' type='SFBool' name='solid' value='true'/>
+        <field accessType='inputOutput' type='SFVec2f' name='range' value='780 380' appinfo='Wavelength in Nanometers.'/>
+        <field accessType='inputOutput' type='SFInt32' name='dimension' value='256' appinfo='Number of subdivisions.'/>
+      </ProtoInterface>
+      <ProtoBody>
+        <TriangleStripSet DEF='_1'
+            stripCount='0'>
+          <IS>
+            <connect nodeField='solid' protoField='solid'/>
+          </IS>
+          <Color/>
+          <Coordinate/>
+        </TriangleStripSet>
+        <Script DEF='EMSpectrumScript'
+            directOutput='true'>
+          <field accessType='inputOutput' type='SFVec2f' name='range'/>
+          <field accessType='inputOutput' type='SFInt32' name='dimension'/>
+          <field accessType='initializeOnly' type='SFNode' name='geometry'>
+            <TriangleStripSet USE='_1'/>
+          </field>
+          <IS>
+            <connect nodeField='range' protoField='range'/>
+            <connect nodeField='dimension' protoField='dimension'/>
+          </IS>
+<![CDATA[ecmascript:
+
+function initialize ()
+{
+   eventsProcessed ();
+}
+
+function eventsProcessed ()
+{
+   const 
+      color = geometry .color .color,
+      point = geometry .coord .point;
+
+   geometry .stripCount = new MFInt32 ((dimension + 1) * 2);
+
+   color .length = 0;
+   point .length = 0;
+
+   for (let i = 0; i < dimension + 1; ++ i)
+   {
+      const 
+         c = waveLengthToRGB (lerp (... range, (i / dimension))),
+         x = (i / dimension * 2) - 1;
+
+      color .push (c);
+      color .push (c);
+
+      point .push (new SFVec3f (x,  1, 0));
+      point .push (new SFVec3f (x, -1, 0));
+   }
+}
+
+function waveLengthToRGB (wavelength)
+{
+   let r, g, b;
+
+   if (wavelength >= 380 && wavelength < 440)
+   {
+      r = -(wavelength - 440) / (440 - 380);
+      g = 0;
+      b = 1;
+   }
+   else if (wavelength < 490)
+   {
+      r = 0;
+      g = (wavelength - 440) / (490 - 440);
+      b = 1;
+   }
+   else if (wavelength < 510)
+   {
+      r = 0;
+      g = 1;
+      b = -(wavelength - 510) / (510 - 490);
+   }
+   else if (wavelength < 580)
+   {
+      r = (wavelength - 510) / (580 - 510);
+      g = 1;
+      b = 0;
+   }
+   else if (wavelength < 645)
+   {
+      r = 1;
+      g = -(wavelength - 645) / (645 - 580);
+      b = 0;
+   }
+   else if (wavelength <= 780)
+   {
+      r = 1;
+      g = 0;
+      b = 0;
+   }
+   else
+   {
+      return [0, 0, 0];
+   }
+
+   // Dämpfung an den Grenzen des sichtbaren Spektrums.
+   let factor;
+
+   if (wavelength < 420)
+      factor = 0.3 + 0.7 * (wavelength - 380) / (420 - 380);
+   else if (wavelength > 700)
+      factor = 0.3 + 0.7 * (780 - wavelength) / (780 - 700);
+   else
+      factor = 1;
+
+   return new SFColor (
+      Math.pow(r * factor, 0.8),
+      Math.pow(g * factor, 0.8),
+      Math.pow(b * factor, 0.8),
+   );
+}
+
+function lerp (source, destination, t)
+{
+   return source + t * (destination - source);
+}
+]]>
+        </Script>
+      </ProtoBody>
+    </ProtoDeclare>
+    <WorldInfo
+        title='EmSpectrum Prototype'>
+      <MetadataSet DEF='Sunrize' containerField='metadata'
+          name='Sunrize'
+          reference='https://create3000.github.io/sunrize/'>
+        <MetadataSet DEF='BrowserFrame'
+            name='BrowserFrame'
+            reference='https://create3000.github.io/sunrize/'>
+          <MetadataBoolean DEF='fixedSize'
+              name='fixedSize'
+              reference='https://create3000.github.io/sunrize/'
+              value='true'/>
+          <MetadataDouble DEF='aspectRatio'
+              name='aspectRatio'
+              reference='https://create3000.github.io/sunrize/'
+              value='12, 1'/>
+          <MetadataString DEF='backgroundColor'
+              name='backgroundColor'
+              reference='https://create3000.github.io/sunrize/'
+              value='""'/>
+        </MetadataSet>
+      </MetadataSet>
+    </WorldInfo>
+    <LayerSet
+        order='1'>
+      <LayoutLayer>
+        <Layout
+            size='0.5, 0.5'/>
+        <Shape>
+          <Appearance>
+            <Material/>
+          </Appearance>
+          <ProtoInstance name='EMSpectrum' containerField='geometry'/>
+        </Shape>
+      </LayoutLayer>
+    </LayerSet>
+  </Scene>
+</X3D>

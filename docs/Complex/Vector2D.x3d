@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 4.1//EN" "https://www.web3d.org/specifications/x3d-4.1.dtd">
+<X3D profile='Interchange' version='4.1' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.1.xsd'>
+  <head>
+    <component name='Core' level='2'/>
+    <component name='Navigation' level='2'/>
+    <component name='PointingDeviceSensor' level='1'/>
+    <component name='Scripting' level='1'/>
+    <component name='Text' level='1'/>
+    <unit category='angle' name='degree' conversionFactor='0.017453292519943295'/>
+    <meta name='creator' content='Holger Seelig'/>
+    <meta name='created' content='Thu, 25 Jun 2026 17:43:41 GMT'/>
+    <meta name='modified' content='Sun, 28 Jun 2026 20:08:22 GMT'/>
+    <meta name='generator' content='Sunrize X3D Editor V2.1.9, https://create3000.github.io/sunrize/'/>
+  </head>
+  <Scene>
+    <ProtoDeclare name='Vector2D'>
+      <ProtoInterface>
+        <field accessType='inputOutput' type='SFVec2f' name='vector' value='1 0'/>
+        <field accessType='inputOutput' type='SFColor' name='color' value='1 1 1'/>
+        <field accessType='inputOutput' type='SFColor' name='labelColor' value='1 1 1'/>
+        <field accessType='inputOutput' type='MFString' name='label'/>
+        <field accessType='inputOutput' type='SFBool' name='pointerEvents' value='true'/>
+      </ProtoInterface>
+      <ProtoBody>
+        <Group>
+          <Transform DEF='Cylinder_1'
+              translation='0 0.5 0'
+              center='0 -0.5 0'>
+            <Shape>
+              <Appearance DEF='_2'>
+                <Material>
+                  <IS>
+                    <connect nodeField='diffuseColor' protoField='color'/>
+                  </IS>
+                </Material>
+              </Appearance>
+              <Cylinder
+                  height='1'
+                  radius='0.05'/>
+            </Shape>
+          </Transform>
+          <Group DEF='Cone_1'>
+            <Transform DEF='Cone'
+                translation='0 1 0'
+                center='0 -1 0'>
+              <Shape>
+                <Appearance USE='_2'/>
+                <Cone
+                    height='0.3'
+                    bottomRadius='0.12'/>
+              </Shape>
+            </Transform>
+            <PlaneSensor DEF='_3'>
+              <IS>
+                <connect nodeField='enabled' protoField='pointerEvents'/>
+              </IS>
+            </PlaneSensor>
+          </Group>
+          <Transform DEF='Label'>
+            <Billboard
+                axisOfRotation='0 0 0'>
+              <Shape>
+                <Appearance>
+                  <UnlitMaterial>
+                    <IS>
+                      <connect nodeField='emissiveColor' protoField='labelColor'/>
+                    </IS>
+                  </UnlitMaterial>
+                </Appearance>
+                <Text
+                    solid='true'>
+                  <IS>
+                    <connect nodeField='string' protoField='label'/>
+                  </IS>
+                  <FontStyle
+                      size='0.35'
+                      justify='"MIDDLE", "MIDDLE"'/>
+                </Text>
+              </Shape>
+            </Billboard>
+          </Transform>
+        </Group>
+        <Script DEF='VectorScript'
+            directOutput='true'>
+          <field accessType='inputOnly' type='SFVec3f' name='set_translation'/>
+          <field accessType='inputOutput' type='SFVec2f' name='vector'/>
+          <field accessType='initializeOnly' type='SFNode' name='sensor'>
+            <PlaneSensor USE='_3'/>
+          </field>
+          <field accessType='initializeOnly' type='SFNode' name='cylinder'>
+            <Transform USE='Cylinder_1'/>
+          </field>
+          <field accessType='initializeOnly' type='SFNode' name='cone'>
+            <Transform USE='Cone'/>
+          </field>
+          <field accessType='initializeOnly' type='SFNode' name='label'>
+            <Transform USE='Label'/>
+          </field>
+          <IS>
+            <connect nodeField='vector' protoField='vector'/>
+          </IS>
+<![CDATA[ecmascript:
+
+function initialize ()
+{
+   set_vector ();
+}
+
+function set_vector ()
+{
+   const
+      length   = vector .length (),
+      rotation = new SFRotation (SFVec3f .Y_AXIS, new SFVec3f (... vector, 0));
+
+   cylinder .scale .y    = length - 0.15;
+   cone .translation .y  = length - 0.15;
+   cone .center .y       = -(length - 0.15);
+   label .translation .y = length + 0.2;
+   label .center .y      = -(length + 0.2);
+
+   cylinder .rotation = rotation;
+   cone     .rotation = rotation;
+   label    .rotation = rotation;
+
+   sensor .offset = new SFVec3f (... vector, 0);
+}
+
+function set_translation (value)
+{
+   vector .x = value .x;
+   vector .y = value .y;
+}
+]]>
+        </Script>
+        <ROUTE fromNode='_3' fromField='translation_changed' toNode='VectorScript' toField='set_translation'/>
+      </ProtoBody>
+    </ProtoDeclare>
+    <WorldInfo>
+      <MetadataSet DEF='Sunrize' containerField='metadata'
+          name='Sunrize'
+          reference='https://create3000.github.io/sunrize/'>
+        <MetadataSet DEF='GridTool'
+            name='GridTool'
+            reference='https://create3000.github.io/sunrize/'>
+          <MetadataBoolean DEF='visible'
+              name='visible'
+              reference='https://create3000.github.io/sunrize/'
+              value='true'/>
+          <MetadataDouble DEF='rotation'
+              name='rotation'
+              reference='https://create3000.github.io/sunrize/'
+              value='1, 0, 0, 1.5707963267949'/>
+        </MetadataSet>
+      </MetadataSet>
+    </WorldInfo>
+    <Viewpoint
+        description='Initial View'/>
+    <ProtoInstance name='Vector2D'>
+      <fieldValue name='vector' value='1.266574 -1.973545'/>
+      <fieldValue name='label' value='"A"'/>
+    </ProtoInstance>
+  </Scene>
+</X3D>

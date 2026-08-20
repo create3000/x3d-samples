@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 4.1//EN" "https://www.web3d.org/specifications/x3d-4.1.dtd">
+<X3D profile='Interchange' version='4.1' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.1.xsd'>
+  <head>
+    <component name='Core' level='2'/>
+    <component name='Geometry2D' level='1'/>
+    <component name='Navigation' level='2'/>
+    <component name='PointingDeviceSensor' level='1'/>
+    <component name='Scripting' level='1'/>
+    <component name='Text' level='1'/>
+    <unit category='angle' name='degree' conversionFactor='0.017453292519943295'/>
+    <meta name='creator' content='Holger Seelig'/>
+    <meta name='created' content='Thu, 25 Jun 2026 18:13:45 GMT'/>
+    <meta name='modified' content='Mon, 29 Jun 2026 12:49:36 GMT'/>
+    <meta name='generator' content='Sunrize X3D Editor V2.1.9, https://create3000.github.io/sunrize/'/>
+  </head>
+  <Scene>
+    <ExternProtoDeclare name='Vector2D' url='"Vector2D.x3d"'>
+      <field accessType='inputOutput' type='SFVec2f' name='vector'/>
+      <field accessType='inputOutput' type='SFColor' name='color'/>
+      <field accessType='inputOutput' type='SFColor' name='labelColor'/>
+      <field accessType='inputOutput' type='MFString' name='label'/>
+      <field accessType='inputOutput' type='SFBool' name='pointerEvents'/>
+    </ExternProtoDeclare>
+    <ExternProtoDeclare name='Grid' url='"Grid.x3d"'>
+      <field accessType='inputOutput' type='SFVec3f' name='translation'/>
+      <field accessType='inputOutput' type='SFRotation' name='rotation'/>
+      <field accessType='inputOutput' type='SFVec3f' name='scale'/>
+      <field accessType='inputOutput' type='MFInt32' name='dimension'/>
+      <field accessType='inputOutput' type='MFInt32' name='majorLineEvery'/>
+      <field accessType='inputOutput' type='MFInt32' name='majorLineOffset'/>
+      <field accessType='inputOutput' type='SFColor' name='color'/>
+      <field accessType='inputOutput' type='SFFloat' name='transparency'/>
+      <field accessType='inputOutput' type='SFColor' name='lineColor'/>
+      <field accessType='inputOutput' type='SFFloat' name='lineTransparency'/>
+      <field accessType='inputOutput' type='SFColor' name='majorLineColor'/>
+      <field accessType='inputOutput' type='SFFloat' name='majorLineTransparency'/>
+      <field accessType='initializeOnly' type='SFBool' name='solid'/>
+    </ExternProtoDeclare>
+    <WorldInfo
+        title='Complex Vector Multiplication'
+        info='"Drag the tip of arrows A or B to see the result in C."'>
+      <MetadataSet DEF='Sunrize' containerField='metadata'
+          name='Sunrize'
+          reference='https://create3000.github.io/sunrize/'>
+        <MetadataSet DEF='GridTool'
+            name='GridTool'
+            reference='https://create3000.github.io/sunrize/'>
+          <MetadataDouble DEF='rotation'
+              name='rotation'
+              reference='https://create3000.github.io/sunrize/'
+              value='1, 0, 0, 1.5707963267949'/>
+        </MetadataSet>
+      </MetadataSet>
+    </WorldInfo>
+    <Background DEF='Gray'
+        skyColor='0.2 0.2 0.2'/>
+    <OrthoViewpoint
+        description='Initial View'
+        fieldOfView='-5 -5 5 5'>
+      <NavigationInfo containerField='navigationInfo'
+          type='"NONE"'/>
+    </OrthoViewpoint>
+    <Transform DEF='Grid'
+        translation='0 0 -0.04'>
+      <ProtoInstance name='Grid'>
+        <fieldValue name='rotation' value='1 0 0 90'/>
+        <fieldValue name='lineColor' value='0 0 0'/>
+        <fieldValue name='lineTransparency' value='0.6'/>
+        <fieldValue name='majorLineColor' value='0 0 0'/>
+        <fieldValue name='majorLineTransparency' value='0.2'/>
+      </ProtoInstance>
+    </Transform>
+    <Transform DEF='Headline'
+        translation='-4.5 4.5 0'>
+      <Shape>
+        <Appearance>
+          <Material/>
+        </Appearance>
+        <Text
+            string='"Complex Vector Multiplication"'>
+          <FontStyle
+              size='0.3'
+              justify='"BEGIN", "MIDDLE"'/>
+        </Text>
+      </Shape>
+    </Transform>
+    <ProtoInstance name='Vector2D' DEF='A'>
+      <fieldValue name='vector' value='0.9812133 1.000004'/>
+      <fieldValue name='color' value='0.8 0 0'/>
+      <fieldValue name='label' value='"A"'/>
+    </ProtoInstance>
+    <ProtoInstance name='Vector2D' DEF='B'>
+      <fieldValue name='vector' value='-2.019328 1.005206'/>
+      <fieldValue name='color' value='0.4352941 0.3490196 0.6862745'/>
+      <fieldValue name='label' value='"B"'/>
+    </ProtoInstance>
+    <ProtoInstance name='Vector2D' DEF='C'>
+      <fieldValue name='vector' value='-2.986601 -1.033015'/>
+      <fieldValue name='color' value='0.945098 0.7607843 0.1960784'/>
+      <fieldValue name='label' value='"C"'/>
+      <fieldValue name='pointerEvents' value='false'/>
+    </ProtoInstance>
+    <Script DEF='VectorMultiplicationScript'
+        directOutput='true'>
+      <field accessType='inputOutput' type='SFVec2f' name='a' value='0.9812133 1.000004'/>
+      <field accessType='inputOutput' type='SFVec2f' name='b' value='-2.019328 1.005206'/>
+      <field accessType='outputOnly' type='SFVec2f' name='c_changed'/>
+<![CDATA[ecmascript:
+
+function initialized ()
+{
+   eventsProcessed ();
+}
+
+function eventsProcessed (value, time)
+{
+   const
+      { x: ar, y: ai } = a,
+      { x: br, y: bi } = b;
+
+   c_changed .x = ar * br - ai * bi;
+   c_changed .y = ar * bi + ai * br;
+}
+]]>
+    </Script>
+    <ROUTE fromNode='VectorMultiplicationScript' fromField='c_changed' toNode='C' toField='set_vector'/>
+    <ROUTE fromNode='A' fromField='vector_changed' toNode='VectorMultiplicationScript' toField='set_a'/>
+    <ROUTE fromNode='B' fromField='vector_changed' toNode='VectorMultiplicationScript' toField='set_b'/>
+  </Scene>
+</X3D>
