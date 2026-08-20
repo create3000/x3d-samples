@@ -8,8 +8,8 @@
     <component name='Scripting' level='1'/>
     <meta name='creator' content='Holger Seelig'/>
     <meta name='created' content='Wed, 19 Aug 2026 14:19:32 GMT'/>
-    <meta name='modified' content='Thu, 20 Aug 2026 16:18:36 GMT'/>
-    <meta name='generator' content='Sunrize X3D Editor V2.1.21, https://create3000.github.io/sunrize/'/>
+    <meta name='modified' content='Thu, 20 Aug 2026 19:15:19 GMT'/>
+    <meta name='generator' content='Sunrize X3D Editor V2.2.0, https://create3000.github.io/sunrize/'/>
   </head>
   <Scene>
     <ProtoDeclare name='EMSpectrum' appinfo='Creates a rectangle with the specified EM spectrum.'>
@@ -140,26 +140,29 @@ function lerp (source, destination, t)
         </Script>
       </ProtoBody>
     </ProtoDeclare>
-    <MetadataSet DEF='Sunrize'
-        name='Sunrize'
-        reference='https://create3000.github.io/sunrize/'>
-      <MetadataSet DEF='BrowserFrame'
-          name='BrowserFrame'
+    <WorldInfo
+        title='EMSpectrum'>
+      <MetadataSet DEF='Sunrize' containerField='metadata'
+          name='Sunrize'
           reference='https://create3000.github.io/sunrize/'>
-        <MetadataBoolean DEF='fixedSize'
-            name='fixedSize'
-            reference='https://create3000.github.io/sunrize/'
-            value='true'/>
-        <MetadataDouble DEF='aspectRatio'
-            name='aspectRatio'
-            reference='https://create3000.github.io/sunrize/'
-            value='12, 1'/>
-        <MetadataString DEF='backgroundColor'
-            name='backgroundColor'
-            reference='https://create3000.github.io/sunrize/'
-            value='""'/>
+        <MetadataSet DEF='BrowserFrame'
+            name='BrowserFrame'
+            reference='https://create3000.github.io/sunrize/'>
+          <MetadataBoolean DEF='fixedSize'
+              name='fixedSize'
+              reference='https://create3000.github.io/sunrize/'
+              value='true'/>
+          <MetadataDouble DEF='aspectRatio'
+              name='aspectRatio'
+              reference='https://create3000.github.io/sunrize/'
+              value='12, 1'/>
+          <MetadataString DEF='backgroundColor'
+              name='backgroundColor'
+              reference='https://create3000.github.io/sunrize/'
+              value='""'/>
+        </MetadataSet>
       </MetadataSet>
-    </MetadataSet>
+    </WorldInfo>
     <LayerSet
         order='1'>
       <LayoutLayer>
